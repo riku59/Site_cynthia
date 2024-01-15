@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <div className="footer">
       <Logo />
-      <p>laisser un avis</p>
+      <p>Laisser un avis</p>
       <p>Me contacter</p>
       <p>Page facebook</p>
     </div>

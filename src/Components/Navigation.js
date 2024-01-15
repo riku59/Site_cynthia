@@ -7,24 +7,26 @@ const Navigation = () => {
     <div className="navigation">
       <ul>
         <Logo />
-        <NavLink
-          to="/"
-          className={(nav) => (nav.isActive ? "nav-active hover" : "hover")}
-        >
-          <li>Accueil</li>
-        </NavLink>
-        <NavLink
-          to="/Creations"
-          className={(nav) => (nav.isActive ? "nav-active hover" : "hover")}
-        >
-          <li>Créations</li>
-        </NavLink>
-        <NavLink
-          to="/contact"
-          className={(nav) => (nav.isActive ? "nav-active hover" : "hover")}
-        >
-          <li>Contact</li>
-        </NavLink>
+        <div className="nav">
+          <NavLink
+            to="/"
+            className={(nav) => (nav.isActive ? "nav-active hover" : "hover")}
+          >
+            <li>Accueil</li>
+          </NavLink>
+          <NavLink
+            to="/Creations"
+            className={(nav) => (nav.isActive ? "nav-active hover" : "hover")}
+          >
+            <li>Créations</li>
+          </NavLink>
+          <NavLink
+            to="/contact"
+            className={(nav) => (nav.isActive ? "nav-active hover" : "hover")}
+          >
+            <li>Contact</li>
+          </NavLink>
+        </div>
       </ul>
     </div>
   );

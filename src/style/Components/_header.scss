@@ -1,9 +1,9 @@
 .header {
-  height: 88vh;
   padding: 0 40px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   justify-content: center;
+  margin-top: 100px;
   .header-text {
     display: flex;
     flex-direction: column;

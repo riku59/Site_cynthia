@@ -16,7 +16,9 @@ const Header = () => {
           début d'une expérience unique et mémorable.
         </p>
       </div>
-      <div className="header-img"></div>
+      <div className="header-img">
+        <img src="background_header.jpg" alt="" />
+      </div>
     </div>
   );
 };

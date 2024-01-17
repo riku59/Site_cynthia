@@ -1,3 +1,15 @@
+@font-face {
+  font-family: "text";
+  src: url(../fonts/Adamina-Regular.ttf);
+}
+@font-face {
+  font-family: "title";
+  src: url(../fonts/Belleza-Regular.ttf);
+}
+
+$font-title: "title", sans-serif;
+$font-text: "text", serif;
+
 * {
   padding: 0;
   margin: 0;
@@ -11,4 +23,17 @@ body {
   margin: 0 auto;
 
   max-width: 1600px;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: $font-title;
+  letter-spacing: 3px;
+}
+
+p,
+a {
+  font-family: $font-text;
 }

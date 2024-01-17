@@ -6,15 +6,15 @@ const Head = () => {
       <h2>Une demande spécifique?</h2>
       <div className="head-explain">
         <div className="head-container">
-          <h3>Choisissez votre thème</h3>
+          <p>Choisissez votre thème</p>
           <img src="idee.png" alt="logo idée" />
         </div>
         <div className="head-container">
-          <h3>Choisissez vos couleurs</h3>
+          <p>Choisissez vos couleurs</p>
           <img src="paint-palette.png" alt="logo couleur" />
         </div>
         <div className="head-container">
-          <h3>Choisissez votre support</h3>
+          <p>Choisissez votre support</p>
           <img src="support.png" alt="logo support" />
         </div>
       </div>

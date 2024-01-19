@@ -31,6 +31,9 @@ const Produit = () => {
         <img className="d" src="logo_creation_by.jpg" alt="" />
         <img className="e" src="logo_creation_by.jpg" alt="" />
         <img src="logo_creation_by.jpg" alt="" />
+        <img src="logo_creation_by.jpg" alt="" />
+        <img src="logo_creation_by.jpg" alt="" />
+        <img src="logo_creation_by.jpg" alt="" />
       </div>
     </div>
   );

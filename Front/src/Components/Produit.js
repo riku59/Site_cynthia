@@ -30,10 +30,10 @@ const Produit = () => {
         <img className="c" src="logo_creation_by.jpg" alt="" />
         <img className="d" src="logo_creation_by.jpg" alt="" />
         <img className="e" src="logo_creation_by.jpg" alt="" />
-        <img src="logo_creation_by.jpg" alt="" />
-        <img src="logo_creation_by.jpg" alt="" />
-        <img src="logo_creation_by.jpg" alt="" />
-        <img src="logo_creation_by.jpg" alt="" />
+        <img className="g" src="logo_creation_by.jpg" alt="" />
+        <img className="h" src="logo_creation_by.jpg" alt="" />
+        <img className="i" src="logo_creation_by.jpg" alt="" />
+        <img className="j" src="logo_creation_by.jpg" alt="" />
       </div>
     </div>
   );

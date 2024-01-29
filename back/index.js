@@ -1,17 +1,15 @@
 const express = require("express");
+
 const port = process.env.PORT || 5000;
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "Api création cynthia",
-  });
-});
+// MiddleWare qui permet de traiter les données de la request
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use("/post", require("./routes/post.routes"));
 
-const users = require("./routes/users");
-app.use("/users", users);
-
+// lancer le server
 app.listen(port, () => {
-  console.log("serveur en ligne");
+  console.log(`serveur écoutant sur le port ${port}`);
 });

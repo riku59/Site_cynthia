@@ -1,6 +1,8 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const dotenv = require("dotenv").config();
+const authRoutes = require("./routes/auth.routes");
+const userRoutes = require("./routes/user.routes");
 
 const port = process.env.PORT || 5000;
 
@@ -14,6 +16,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false })); // permet de lire les url uncoded  (postman)
 app.use("/post", require("./routes/post.routes"));
+
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 // lancer le server
 app.listen(port, () => {

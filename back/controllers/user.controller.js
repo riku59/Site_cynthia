@@ -16,3 +16,25 @@ exports.getUserInfo = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.query;
+    const user = await User.findOne({
+      verificationToken: token,
+      verificationTokenExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).send("Token is invalid or has expired");
+    }
+
+    user.emailVerified = true;
+    user.verificationToken = undefined; // Clear the verification token
+    user.verificationTokenExpires = undefined; // Clear the token expiration time
+    await user.save();
+
+    res.send("Email has been successfully verified.");
+  } catch (error) {
+    res.status(500).send("Internal server error");
+  }
+};

@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
 
 const Navigation = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    // Redirection à l'accueil ou à la page de login
+    // Vous pouvez utiliser useNavigate pour la redirection
+    // navigate("/");
+  };
+
   return (
     <div className="navigation">
       <ul>
@@ -26,12 +41,18 @@ const Navigation = () => {
           >
             <li>Contact</li>
           </NavLink>
-          <NavLink
-            to="/login"
-            className={(nav) => (nav.isActive ? "nav-active hover" : "hover")}
-          >
-            <li>Login</li>
-          </NavLink>
+          {isLoggedIn ? (
+            <li onClick={handleLogout} style={{ cursor: "pointer" }}>
+              Logout
+            </li>
+          ) : (
+            <NavLink
+              to="/login"
+              className={(nav) => (nav.isActive ? "nav-active hover" : "hover")}
+            >
+              <li>Login</li>
+            </NavLink>
+          )}
         </div>
       </ul>
     </div>
@@ -39,4 +60,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-<h1>Nav</h1>;

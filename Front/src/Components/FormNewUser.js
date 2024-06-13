@@ -1,14 +1,25 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import correct de useNavigate
 
 const FormNewUser = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [captcha, setCaptcha] = useState(
+    Math.floor(Math.random() * 10 + 1) + Math.floor(Math.random() * 10 + 1)
+  );
+  const [captchaInput, setCaptchaInput] = useState("");
+  const navigate = useNavigate(); // Création d'une instance de navigate
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // API call to register the new user
+
+    // Vérifier si la réponse au CAPTCHA est correcte
+    if (parseInt(captchaInput) !== captcha) {
+      alert("CAPTCHA incorrect, veuillez réessayer.");
+      return; // Stop the form submission if CAPTCHA is incorrect
+    }
+
     try {
       const response = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
@@ -20,14 +31,12 @@ const FormNewUser = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("User created:", data);
-        // Redirect or display success message
+        navigate("/verify-email"); // Redirect after successful registration
       } else {
         console.error("Failed to create user:", data.message);
-        // Handle errors, show user feedback
       }
     } catch (error) {
       console.error("Network error:", error);
-      // Handle network errors
     }
   };
 
@@ -59,9 +68,18 @@ const FormNewUser = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button>
-          <Link to="/signup">s'inscrire</Link>
-        </button>
+        <label htmlFor="captcha">
+          Combien font {Math.floor(captcha / 2)} +{" "}
+          {captcha - Math.floor(captcha / 2)} ?
+        </label>
+        <input
+          type="text"
+          id="captcha"
+          value={captchaInput}
+          onChange={(e) => setCaptchaInput(e.target.value)}
+          required
+        />
+        <button type="submit">S'inscrire</button>
       </form>
     </div>
   );

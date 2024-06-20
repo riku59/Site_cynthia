@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import gsap from "gsap/src";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Modal from "react-modal";
+import { checkAdmin } from "../utils/auth";
+import { deleteProduct, fetchProducts } from "../utils/product";
 
 Modal.setAppElement("#root");
 
@@ -30,34 +32,21 @@ const Produit = () => {
       },
     });
 
-    // Vérifiez si l'utilisateur est admin
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetch("http://localhost:5000/api/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.user && data.user.role === "admin") {
-            setIsAdmin(true);
-          }
-        })
-        .catch((error) => {
-          console.error("Erreur lors de la vérification du rôle admin:", error);
-        });
-    }
+    const fetchData = async () => {
+      //vérifie si l'utilisateur est Admin
+      const isAdmin = await checkAdmin();
+      setIsAdmin(isAdmin);
 
-    // Récupérer les produits
-    fetch("http://localhost:5000/api/products")
-      .then((response) => response.json())
-      .then((data) => {
-        setProducts(data);
-      })
-      .catch((error) => {
+      // Récupérer les produits
+      try {
+        const productsData = await fetchProducts();
+        setProducts(productsData);
+      } catch (error) {
         console.error("Erreur lors de la récupération des produits:", error);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleImageChange = (e) => {
@@ -72,6 +61,7 @@ const Produit = () => {
     formData.append("description", description);
     formData.append("price", price);
 
+    // ajouter un article
     try {
       const response = await fetch("http://localhost:5000/api/products", {
         method: "POST",
@@ -90,6 +80,17 @@ const Produit = () => {
       }
     } catch (error) {
       console.error("Erreur réseau:", error);
+    }
+  };
+
+  // supprimer un produit
+  const handleDelete = async (id) => {
+    try {
+      await deleteProduct(id);
+      setProducts(products.filter((product) => product._id !== id));
+      alert("Article supprimé avec succès!");
+    } catch (error) {
+      console.error("Erreur lors de la suppression du produit:", error);
     }
   };
 
@@ -143,6 +144,14 @@ const Produit = () => {
             />
             <p>{product.description}</p>
             <p>{product.price} €</p>
+            {isAdmin && (
+              <button
+                onClick={() => handleDelete(product._id)}
+                className="delete-button"
+              >
+                <img src="/path/to/trash-icon.png" alt="Supprimer" />
+              </button>
+            )}
           </div>
         ))}
       </div>

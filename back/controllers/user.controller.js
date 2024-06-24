@@ -3,7 +3,7 @@ const User = require("../models/user.model");
 
 exports.getUserInfo = async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1]; // Récupère le token du header Authorization
+    const token = req.headers.authorization.split(" ")[1]; // récupére le token du localStorage
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // Utilisez la clé secrète de l'environnement
     const user = await User.findById(decoded.userId);
 

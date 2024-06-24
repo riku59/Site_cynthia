@@ -12,6 +12,30 @@ export const fetchProducts = async () => {
   }
 };
 
+export const addProducts = async (formData) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("l'utilisateur n'est pas identifié.");
+  }
+
+  try {
+    const response = await fetch("http://localhost:5000/api/products", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    if (!response.ok) {
+      throw new Error(" Erreur lors de l'ajout du produit");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur réseau:", error);
+    throw error;
+  }
+};
+
 export const deleteProduct = async (id) => {
   const token = localStorage.getItem("token");
   if (!token) {

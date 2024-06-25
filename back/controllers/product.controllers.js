@@ -1,17 +1,24 @@
-const ProductModel = require("../models/product.model");
-const multer = require("multer");
+const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
+const ProductModel = require("../models/product.model");
 
 // Configuration de multer pour le stockage des fichiers
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
+  destination: "uploads/",
   filename: (req, file, cb) => {
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
-const upload = multer({ storage: storage }).single("image");
+const upload = multer({ storage }).single("image");
+
+// Fonction pour supprimer une image
+const deleteImage = (filePath) => {
+  fs.unlink(filePath, (err) => {
+    if (err) console.error("Erreur lors de la suppression du fichier:", err);
+    else console.log("Fichier supprimé:", filePath);
+  });
+};
 
 module.exports.getProducts = async (req, res) => {
   try {
@@ -24,9 +31,7 @@ module.exports.getProducts = async (req, res) => {
 
 module.exports.setProduct = async (req, res) => {
   upload(req, res, async (err) => {
-    if (err) {
-      return res.status(500).json({ message: err.message });
-    }
+    if (err) return res.status(500).json({ message: err.message });
 
     if (!req.body.description || !req.body.price) {
       return res
@@ -48,33 +53,36 @@ module.exports.setProduct = async (req, res) => {
 };
 
 module.exports.editProduct = async (req, res) => {
-  try {
-    const product = await ProductModel.findById(req.params.id);
+  upload(req, res, async (err) => {
+    if (err) return res.status(500).json({ message: err.message });
 
-    if (!product) {
-      return res.status(400).json({ message: "Ce produit n'existe pas" });
-    }
+    try {
+      const product = await ProductModel.findById(req.params.id);
+      if (!product)
+        return res.status(400).json({ message: "Ce produit n'existe pas" });
 
-    const updatedProduct = await ProductModel.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
+      product.description = req.body.description || product.description;
+      product.price = req.body.price || product.price;
+      if (req.file) {
+        product.imageUrl = "/uploads/" + req.file.filename;
       }
-    );
-    res.status(200).json(updatedProduct);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+
+      const updatedProduct = await product.save();
+      res.status(200).json(updatedProduct);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
 };
 
 module.exports.deleteProduct = async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
-
-    if (!product) {
+    if (!product)
       return res.status(400).json({ message: "Ce produit n'existe pas" });
-    }
+
+    const filePath = path.join(__dirname, "..", product.imageUrl);
+    deleteImage(filePath);
 
     await product.remove();
     res.status(200).json({ message: "Produit supprimé " + req.params.id });

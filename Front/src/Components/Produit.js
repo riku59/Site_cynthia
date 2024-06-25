@@ -4,49 +4,52 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import useAdminCheck from "../hooks/useAdminCheck";
 import useProducts from "../hooks/useProducts";
+import ProductForm from "./productForm";
 
 Modal.setAppElement("#root");
 
 const Produit = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [description, setDescription] = useState("");
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
-  const { products, addProduct, deleteProductById } = useProducts();
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const { products, addProduct, deleteProductById, modifProduct } =
+    useProducts();
   const isAdmin = useAdminCheck();
-
-  // gsap.registerPlugin(ScrollTrigger);
-  // gsap.to(".d", {
-  //   scrollTrigger: {
-  //     trigger: ".d",
-  //     start: "top 300px",
-  //     end: "top 0px",
-  //     markers: true,
-  //     scrub: true,
-  //     pin: true,
-  //     x: 250,
-  //     rotation: 360,
-  //     duration: 1,
-  //     ease: "none",
-  //   },
-  // });
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
 
   const handleAdd = async (e) => {
-    e.preventDefault();
-
     const formData = new FormData();
     formData.append("image", image);
     formData.append("description", description);
     formData.append("price", price);
-    await addProduct(formData); // ajouter un article
+    await addProduct(formData);
     setIsModalOpen(false);
   };
 
-  // supprimer un produit
+  const handleEdit = async (e) => {
+    const formData = new FormData();
+    if (image) {
+      formData.append("image", image);
+    }
+    formData.append("description", description);
+    formData.append("price", price);
+    await modifProduct(currentProduct._id, formData);
+    setEditModalOpen(false);
+  };
+
+  const openEditModal = (product) => {
+    setCurrentProduct(product);
+    setDescription(product.description);
+    setPrice(product.price);
+    setEditModalOpen(true);
+  };
+
   const handleDelete = async (id) => {
     await deleteProductById(id);
   };
@@ -63,34 +66,33 @@ const Produit = () => {
         contentLabel="Ajouter un article"
       >
         <h2>Ajouter un article</h2>
-        <form onSubmit={handleAdd}>
-          <label>
-            Photo:
-            <input type="file" onChange={handleImageChange} required />
-          </label>
-          <label>
-            Description:
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-          </label>
-          <label>
-            Prix:
-            <input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              required
-            />
-          </label>
-          <button type="submit">Ajouter</button>
-          <button type="button" onClick={() => setIsModalOpen(false)}>
-            Annuler
-          </button>
-        </form>
+        <ProductForm
+          onSubmit={handleAdd}
+          onImageChange={handleImageChange}
+          description={description}
+          setDescription={setDescription}
+          price={price}
+          setPrice={setPrice}
+          setIsModalOpen={setIsModalOpen}
+          imageRequired={true}
+        />
+      </Modal>
+      <Modal
+        isOpen={editModalOpen}
+        onRequestClose={() => setEditModalOpen(false)}
+        contentLabel="Modifier un article"
+      >
+        <h2>Modifier un article</h2>
+        <ProductForm
+          onSubmit={handleEdit}
+          onImageChange={handleImageChange}
+          description={description}
+          setDescription={setDescription}
+          price={price}
+          setPrice={setPrice}
+          setIsModalOpen={setEditModalOpen}
+          imageRequired={false}
+        />
       </Modal>
       <div className="produit">
         {products.map((product) => (
@@ -102,12 +104,20 @@ const Produit = () => {
             <p>{product.description}</p>
             <p>{product.price} €</p>
             {isAdmin && (
-              <button
-                onClick={() => handleDelete(product._id)}
-                className="delete-button"
-              >
-                <img src="/path/to/trash-icon.png" alt="Supprimer" />
-              </button>
+              <>
+                <button
+                  onClick={() => openEditModal(product)}
+                  className="edit-button"
+                >
+                  Modifier
+                </button>
+                <button
+                  onClick={() => handleDelete(product._id)}
+                  className="delete-button"
+                >
+                  <img src="/path/to/trash-icon.png" alt="Supprimer" />
+                </button>
+              </>
             )}
           </div>
         ))}

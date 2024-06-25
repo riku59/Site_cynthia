@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { addProducts, deleteProduct, fetchProducts } from "../utils/product";
+import {
+  addProducts,
+  deleteProduct,
+  fetchProducts,
+  updateProduct,
+} from "../utils/product";
 
 const useProducts = () => {
   const [products, setProducts] = useState([]);
@@ -18,6 +23,7 @@ const useProducts = () => {
     fetchData();
   }, []);
 
+  // ajout d'un produit
   const addProduct = async (formData) => {
     try {
       const newProduct = await addProducts(formData);
@@ -26,7 +32,21 @@ const useProducts = () => {
       console.error("Erreur lors de l'ajout du produit :", error);
     }
   };
+  // modifier un produit.
+  const modifProduct = async (id, formData) => {
+    try {
+      const updatedProduct = await updateProduct(id, formData);
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product._id === id ? updatedProduct : product
+        )
+      );
+    } catch (error) {
+      console.error("Erreur lors de la modification du produit", error);
+    }
+  };
 
+  //supprimer un produit
   const deleteProductById = async (id) => {
     try {
       await deleteProduct(id);
@@ -38,7 +58,7 @@ const useProducts = () => {
     }
   };
 
-  return { products, addProduct, deleteProductById };
+  return { products, addProduct, deleteProductById, modifProduct };
 };
 
 export default useProducts;

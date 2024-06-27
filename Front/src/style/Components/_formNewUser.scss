@@ -6,24 +6,20 @@
   justify-content: center;
   flex-direction: column;
 }
-
 .form-new-user h2 {
   text-align: center;
   margin-top: 40px;
   margin-bottom: 40px;
 }
-
 .form-new-user form {
   text-align: left;
   margin-top: 30px;
   display: flex;
   flex-direction: column;
 }
-
 .form-new-user label {
   margin: 2em 0 1em 0;
 }
-
 .form-new-user input[type="submit"] {
   margin-top: 50px;
   width: 180px;
@@ -34,7 +30,6 @@
   border: none;
   cursor: pointer;
 }
-
 .form-new-user input[type="text"],
 .form-new-user input[type="email"],
 .form-new-user input[type="password"] {
@@ -44,13 +39,11 @@
   padding: 0 15px;
   border-radius: 10px;
 }
-
 .form-new-user p {
   text-align: center;
   margin-bottom: 50px;
   font-size: 15px;
 }
-
 button {
   width: 180px;
   border-radius: 60px;

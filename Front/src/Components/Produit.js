@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import useAdminCheck from "../hooks/useAdminCheck";
 import useProducts from "../hooks/useProducts";
 import ProductForm from "./productForm";
+import { FaPen, FaTrash } from "react-icons/fa";
 
 Modal.setAppElement("#root");
 
@@ -109,13 +110,13 @@ const Produit = () => {
                   onClick={() => openEditModal(product)}
                   className="edit-button"
                 >
-                  Modifier
+                  <FaPen />
                 </button>
                 <button
                   onClick={() => handleDelete(product._id)}
                   className="delete-button"
                 >
-                  <img src="/path/to/trash-icon.png" alt="Supprimer" />
+                  <FaTrash />
                 </button>
               </>
             )}

@@ -1,11 +1,58 @@
 .produit {
-  // display: grid;
-  // grid-template-columns: 1fr 1fr;
-  // gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   margin-bottom: 40px;
+  gap: 10px;
+  padding: 30px;
+  background-color: bisque;
+  border-radius: 30px;
+  text-align: center;
+  .product-item {
+    position: relative;
+    width: 95%;
+    border-radius: 30px;
+    border: 1px solid beige;
+    height: 90%;
+    box-shadow: 5px 7px 19px #d3c4c4;
+  }
+
   img {
     width: 100%;
+    height: 80%;
     border-radius: 30px;
+    box-shadow: 1px 1px 1px rgba(250, 128, 114, 0.322);
+    background-position: center;
+    object-fit: cover;
+  }
+  p {
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
+  .edit-button {
+    margin: 0;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: #1d6154c9;
+    border: 1px solid #14a589;
+    cursor: pointer;
+  }
+  .delete-button {
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background: #ff000080;
+    border: 1px solid red;
+    margin: 0;
+    cursor: pointer;
+
+    svg {
+      line-height: 5px;
+    }
   }
 }
 .ReactModal__Overlay {

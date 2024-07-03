@@ -78,7 +78,7 @@ const Header = () => {
         </p>
       </div>
       <div className="header-img">
-        <img src="image_accueil.webp" alt="" />
+        <img src="image_accueil.webp" alt="img_accueil" />
       </div>
     </div>
   );

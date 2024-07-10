@@ -5,6 +5,7 @@ const FormNewUser = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [captcha, setCaptcha] = useState(
     Math.floor(Math.random() * 10 + 1) + Math.floor(Math.random() * 10 + 1)
   );
@@ -29,11 +30,13 @@ const FormNewUser = () => {
         body: JSON.stringify({ username, email, password }),
       });
       const data = await response.json();
-      if (response.ok) {
-        console.log("User created:", data);
-        navigate("/verify-email"); // Redirect after successful registration
+      if (!response.ok) {
+        setErrorMessage(
+          data.message || "Échec de la création du compte. Veuillez réessayer."
+        );
       } else {
-        console.error("Failed to create user:", data.message);
+        console.log("User created:", data);
+        navigate("/verify-email");
       }
     } catch (error) {
       console.error("Network error:", error);

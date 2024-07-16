@@ -8,16 +8,7 @@ exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const confirmationCode = crypto.randomBytes(20).toString("hex");
-    const emailError = await sendConfirmationEmail(email, confirmationCode);
-    if (emailError) {
-      res.status(500).json({
-        message: "Failed to send confirmation email",
-        error: emailError.message,
-      });
-      return;
-    }
 
     const newUser = new User({
       username,
@@ -27,14 +18,23 @@ exports.register = async (req, res) => {
       status: "Pending",
     });
 
-    await newUser.save();
-    sendConfirmationEmail(email, confirmationCode);
+    await newUser.save(); // enregistre l'utilisateur dans la base de donnée.
+
+    const emailError = await sendConfirmationEmail(email, confirmationCode);
+    if (emailError) {
+      res.status(500).json({
+        message: "Echec de l'envoie de l'e-mail de confirmation.",
+        error: emailError.message,
+      });
+      return;
+    }
+
     res.status(201).json({
       message:
-        "User registered successfully. Please check your email to confirm.",
+        "Utilisateur enregistré avec succès. Merci de valider la confirmation d'e-mail.",
     });
   } catch (error) {
-    console.error("Registration error:", error);
+    console.error("Erreur d'enregistrement utilisateur:", error);
     res
       .status(500)
       .json({ message: "Internal Server Error", error: error.message });
@@ -47,14 +47,22 @@ exports.login = async (req, res) => {
 
     // Validation basique (pourrait être améliorée avec Joi ou une autre librairie)
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required." });
+      return res.status(400).json({ message: "Email et mot de passe requis." });
     }
 
     const user = await User.findOne({ email });
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ message: "Information d'identification incorrect." });
+    }
+
+    // Verifier que l'utilisateur a confirmé son email.
+
+    if (user.status !== "Active") {
+      return res
+        .status(401)
+        .json({ message: "Merci de vérifier vos e-mails." });
     }
 
     const token = jwt.sign(

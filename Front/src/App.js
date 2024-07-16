@@ -9,6 +9,9 @@ import gsap from "gsap";
 import Login from "./pages/Login";
 import NewUser from "./pages/NewUser";
 import SignupConfirmation from "./pages/SignupConfirmation";
+import ConfirmationMail from "./pages/ConfirmationMail";
+import EmailVerificationSuccess from "./pages/EmailVerificationSuccess";
+import EmailVerificationFailure from "./pages/EmailVerificationFailure";
 
 const App = () => {
   useEffect(() => {
@@ -33,6 +36,18 @@ const App = () => {
         <Route path="/Login" element={<Login />} />
         <Route path="/signup" element={<NewUser />} />
         <Route path="/verify-email" element={<SignupConfirmation />} />
+        <Route
+          path="/confirm/:confirmationCode"
+          element={<ConfirmationMail />}
+        />
+        <Route
+          path="/verification-success"
+          element={<EmailVerificationSuccess />}
+        />
+        <Route
+          path="/verification-failure"
+          element={<EmailVerificationFailure />}
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

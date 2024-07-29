@@ -5,7 +5,6 @@ const {
   editProduct,
   deleteProduct,
 } = require("../controllers/product.controllers.js");
-
 const router = express.Router();
 const adminAuth = require("../middleware/adminAuth.js");
 

@@ -12,6 +12,7 @@ import SignupConfirmation from "./pages/SignupConfirmation";
 import ConfirmationMail from "./pages/ConfirmationMail";
 import EmailVerificationSuccess from "./pages/EmailVerificationSuccess";
 import EmailVerificationFailure from "./pages/EmailVerificationFailure";
+import { CartProvider } from "./context/CartContext";
 
 const App = () => {
   useEffect(() => {
@@ -28,29 +29,31 @@ const App = () => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/Creations" element={<Creation />} />
-        <Route path="/Contact" element={<Contact />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/signup" element={<NewUser />} />
-        <Route path="/verify-email" element={<SignupConfirmation />} />
-        <Route
-          path="/confirm/:confirmationCode"
-          element={<ConfirmationMail />}
-        />
-        <Route
-          path="/verification-success"
-          element={<EmailVerificationSuccess />}
-        />
-        <Route
-          path="/verification-failure"
-          element={<EmailVerificationFailure />}
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/Creations" element={<Creation />} />
+          <Route path="/Contact" element={<Contact />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/signup" element={<NewUser />} />
+          <Route path="/verify-email" element={<SignupConfirmation />} />
+          <Route
+            path="/confirm/:confirmationCode"
+            element={<ConfirmationMail />}
+          />
+          <Route
+            path="/verification-success"
+            element={<EmailVerificationSuccess />}
+          />
+          <Route
+            path="/verification-failure"
+            element={<EmailVerificationFailure />}
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </CartProvider>
   );
 };
 

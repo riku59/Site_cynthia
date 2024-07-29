@@ -6,6 +6,7 @@ import useAdminCheck from "../hooks/useAdminCheck";
 import useProducts from "../hooks/useProducts";
 import ProductForm from "./productForm";
 import { FaPen, FaTrash } from "react-icons/fa";
+import { useCartActions } from "../hooks/useCartActions";
 
 Modal.setAppElement("#root");
 
@@ -19,6 +20,7 @@ const Produit = () => {
   const { products, addProduct, deleteProductById, modifProduct } =
     useProducts();
   const isAdmin = useAdminCheck();
+  const { addToCart } = useCartActions();
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
@@ -104,7 +106,7 @@ const Produit = () => {
             />
             <p>{product.description}</p>
             <p>{product.price} €</p>
-            {isAdmin && (
+            {isAdmin ? (
               <>
                 <button
                   onClick={() => openEditModal(product)}
@@ -119,6 +121,10 @@ const Produit = () => {
                   <FaTrash />
                 </button>
               </>
+            ) : (
+              <button onClick={() => addToCart(product._id, 1)}>
+                Ajouter au panier
+              </button>
             )}
           </div>
         ))}

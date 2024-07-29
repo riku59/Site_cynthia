@@ -5,6 +5,7 @@ const dotenv = require("dotenv").config();
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const productRoutes = require("./routes/product.routes");
+const cartRoutes = require("./routes/cart.routes");
 const path = require("path");
 const fs = require("fs");
 
@@ -22,7 +23,13 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Activer CORS pour toutes les requêtes
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:3000", // Spécifiez l'URL de votre front-end
+  credentials: true, // Pour accepter les cookies et les informations d'authentification
+  optionsSuccessStatus: 200, // Pour les navigateurs plus anciens qui n'utilisent pas le statut par défaut 204
+};
+
+app.use(cors(corsOptions));
 
 // MiddleWare qui permet de traiter les données de la request
 app.use(express.json());
@@ -32,6 +39,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api", cartRoutes);
 
 // lancer le server
 app.listen(port, () => {

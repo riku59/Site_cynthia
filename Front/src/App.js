@@ -13,6 +13,8 @@ import ConfirmationMail from "./pages/ConfirmationMail";
 import EmailVerificationSuccess from "./pages/EmailVerificationSuccess";
 import EmailVerificationFailure from "./pages/EmailVerificationFailure";
 import { CartProvider } from "./context/CartContext";
+import Cart from "./Components/Cart";
+import Produit from "./Components/Produit";
 
 const App = () => {
   useEffect(() => {
@@ -50,6 +52,9 @@ const App = () => {
             path="/verification-failure"
             element={<EmailVerificationFailure />}
           />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/produit" element={<Produit />} />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

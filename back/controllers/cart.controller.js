@@ -1,9 +1,12 @@
+const Cart = require("../models/cart.model");
+const Product = require("../models/product.model");
+
 exports.addToCart = async (req, res) => {
-  const { userId, productId, quantity } = req.body;
-  const Cart = require("../models/cart.model");
-  const Product = require("../models/product.model");
+  const { productId, quantity } = req.body;
+  const userId = req.user._id; // Récupérer l'ID de l'utilisateur authentifié
 
   try {
+    console.log("Cart Model:", Cart);
     let cart = await Cart.findOne({ user: userId });
     const product = await Product.findById(productId);
 
@@ -15,27 +18,23 @@ exports.addToCart = async (req, res) => {
     const item = {
       product: productId,
       quantity,
-      price, // stocker le prix au moment de l'ajout pourrait être utile pour le futur
+      price,
       total: quantity * price,
     };
 
     if (cart) {
-      // Le panier existe déjà pour l'utilisateur
       let itemIndex = cart.items.findIndex(
         (p) => p.product.toString() === productId
       );
 
       if (itemIndex > -1) {
-        // Le produit existe déjà dans le panier, mettre à jour la quantité
         let productItem = cart.items[itemIndex];
         productItem.quantity += quantity;
         productItem.total = productItem.quantity * productItem.price;
       } else {
-        // Le produit n'existe pas dans le panier, l'ajouter
         cart.items.push(item);
       }
     } else {
-      // Créer un nouveau panier
       cart = new Cart({
         user: userId,
         items: [item],
@@ -51,7 +50,7 @@ exports.addToCart = async (req, res) => {
 };
 
 exports.getCart = async (req, res) => {
-  const { userId } = req.params; // ou obtenir depuis `req.user` si authentifié
+  const userId = req.user._id; // Récupérer depuis req.user
 
   try {
     const cart = await Cart.findOne({ user: userId }).populate("items.product");
@@ -66,8 +65,9 @@ exports.getCart = async (req, res) => {
       .json({ message: "Erreur lors de la récupération du panier" });
   }
 };
+
 exports.updateCartItem = async (req, res) => {
-  const { userId } = req.user; // Assumons une authentification
+  const userId = req.user._id; // Récupérer depuis req.user
   const { itemId } = req.params;
   const { quantity } = req.body;
 
@@ -98,8 +98,9 @@ exports.updateCartItem = async (req, res) => {
       .json({ message: "Erreur lors de la mise à jour du panier" });
   }
 };
+
 exports.removeCartItem = async (req, res) => {
-  const { userId } = req.user; // Assumons une authentification
+  const userId = req.user._id; // Récupérer depuis req.user
   const { itemId } = req.params;
 
   try {
@@ -123,7 +124,7 @@ exports.removeCartItem = async (req, res) => {
 };
 
 exports.emptyCart = async (req, res) => {
-  const { userId } = req.user; // Assumons une authentification
+  const userId = req.user._id; // Récupérer depuis req.user
 
   try {
     const cart = await Cart.findOne({ user: userId });

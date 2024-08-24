@@ -7,6 +7,7 @@ import useProducts from "../hooks/useProducts";
 import ProductForm from "./productForm";
 import { FaPen, FaTrash } from "react-icons/fa";
 import { useCartActions } from "../hooks/useCartActions";
+import { Link } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
@@ -60,6 +61,7 @@ const Produit = () => {
   return (
     <div>
       <h1>Mes créations</h1>
+      <Link to="/cart"> Voir le panier</Link>
       {isAdmin && (
         <button onClick={() => setIsModalOpen(true)}>Ajouter un article</button>
       )}

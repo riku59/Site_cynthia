@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { checkAdmin } from "../utils/auth";
+import Cart from "./Cart";
 
 const Navigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,11 +28,16 @@ const Navigation = () => {
     navigate("/");
   };
 
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
   return (
     <div className="navigation">
-      <ul>
-        <Logo />
-        <div className="nav">
+      <Logo />
+
+      <div className="nav">
+        <ul>
           <NavLink
             to="/"
             className={(nav) => (nav.isActive ? "nav-active hover" : "hover")}
@@ -49,6 +56,9 @@ const Navigation = () => {
           >
             <li>Contact</li>
           </NavLink>
+          <li onClick={toggleCart} style={{ cursor: "pointer" }}>
+            Voir le panier
+          </li>
           {isLoggedIn ? (
             <li onClick={handleLogout} style={{ cursor: "pointer" }}>
               Logout
@@ -61,8 +71,11 @@ const Navigation = () => {
               <li>Login</li>
             </NavLink>
           )}
-        </div>
-      </ul>
+        </ul>
+      </div>
+
+      {/* Afficher le panier si isCartOpen est vrai */}
+      {isCartOpen && <Cart isVisible={isCartOpen} />}
     </div>
   );
 };

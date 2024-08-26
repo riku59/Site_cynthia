@@ -1,0 +1,96 @@
+.form-contact {
+  margin-top: 20px;
+  color: black;
+
+  ::placeholder {
+    color: black;
+  }
+  .visible {
+    transform: translate(0px);
+    transition: opacity 1.7s ease, transform 1.8s ease;
+    opacity: 1;
+  }
+  h1 {
+    transform: translate(150px);
+    transition: opacity 1.7s ease, transform 1.8s ease;
+
+    padding-bottom: 50px;
+    padding-left: 50px;
+    font-size: 2rem;
+  }
+  input {
+    border: 1px solid gray;
+    border-radius: 22px;
+    opacity: 0.75;
+    padding: 22px 30px;
+    height: 50px;
+
+    color: black;
+  }
+  textarea {
+    border: 1px solid gray;
+    resize: none;
+    border-radius: 22px;
+    opacity: 0.75;
+    padding: 22px 30px;
+    color: black;
+  }
+  form.visible {
+    transform: translateY(0px);
+    transition: opacity 1.7s ease, transform 1.8s ease;
+    opacity: 1;
+  }
+  form {
+    transform: translate(200px);
+    transition: opacity 1.7s ease, transform 1.8s ease;
+
+    display: grid;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 20% 20% 45% 15%;
+    grid-template-areas:
+      "name email"
+      "objet objet"
+      "message message"
+      "submit submit";
+
+    gap: 20px;
+    #nom {
+      grid-area: name;
+      width: 100%;
+    }
+    #email {
+      grid-area: email;
+      width: 100%;
+    }
+    #objet {
+      grid-area: objet;
+      width: 100%;
+    }
+    #message {
+      grid-area: message;
+      width: 100%;
+      padding-bottom: 50px;
+    }
+    #submit {
+      grid-area: submit;
+      display: flex;
+      width: 30%;
+      padding: 10px 20px;
+      margin: 0 auto;
+      justify-content: center;
+
+      &:hover {
+        cursor: pointer;
+        box-shadow: 0 7px 30px -5px white;
+      }
+    }
+  }
+  padding-bottom: 100px;
+  input:focus,
+  textarea:focus {
+    border: 2px solid rgb(0, 0, 0);
+  }
+}

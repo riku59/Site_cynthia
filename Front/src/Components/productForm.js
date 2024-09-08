@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { CATEGORIES } from "../constants/categories";
 
 const ProductForm = ({
   onSubmit,
@@ -12,31 +13,41 @@ const ProductForm = ({
   setCategory,
   setIsModalOpen,
   imageRequired = false,
+  existingImage = null,
 }) => {
   const { register, handleSubmit } = useForm();
+  const [imagePreview, setImagePreview] = useState(existingImage);
 
-  const handleFormSubmit = (data) => {
-    onSubmit();
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl);
+      onImageChange(e); // Appeler la fonction passée en prop
+    }
   };
 
-  const categories = [
-    "disney",
-    "jeux vidéo",
-    "verre",
-    "ardoise",
-    "fleur",
-    "mirroir",
-  ];
+  useEffect(() => {
+    // Réinitialiser l'aperçu lorsque l'image existante change
+    setImagePreview(existingImage);
+  }, [existingImage]);
+
+  const handleFormSubmit = (data) => {
+    onSubmit(data);
+  };
 
   const handleCategoryChange = (e) => {
     const { value, checked } = e.target;
-    if (checked) {
-      // Ajouter la catégorie si elle est cochée
-      setCategory([...category, value]);
-    } else {
-      // Supprimer la catégorie si elle est décochée
-      setCategory(category.filter((cat) => cat !== value));
-    }
+
+    setCategory((prevCategory) => {
+      if (checked) {
+        // Ajouter la catégorie si elle est cochée
+        return [...prevCategory, value];
+      } else {
+        // Supprimer la catégorie si elle est décochée
+        return prevCategory.filter((cat) => cat !== value);
+      }
+    });
   };
 
   return (
@@ -46,9 +57,18 @@ const ProductForm = ({
         <input
           type="file"
           {...register("image", { required: imageRequired })}
-          onChange={onImageChange}
+          onChange={handleImageChange}
         />
       </label>
+      {imagePreview && (
+        <div>
+          <img
+            src={imagePreview}
+            alt="Aperçu"
+            style={{ maxWidth: "100px", maxHeight: "100px", marginTop: "10px" }}
+          />
+        </div>
+      )}
       <label>
         Description:
         <input
@@ -70,12 +90,12 @@ const ProductForm = ({
       <label>
         Catégorie:
         <div>
-          {categories.map((cat) => (
+          {CATEGORIES.map((cat) => (
             <div key={cat}>
               <input
                 type="checkbox"
                 value={cat}
-                checked={category.includes(cat)}
+                checked={Array.isArray(category) && category.includes(cat)}
                 onChange={handleCategoryChange}
               />
               <label>{cat}</label>

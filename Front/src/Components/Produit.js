@@ -5,8 +5,10 @@ import Modal from "react-modal";
 import useAdminCheck from "../hooks/useAdminCheck";
 import useProducts from "../hooks/useProducts";
 import ProductForm from "./productForm";
+
 import { FaPen, FaTrash } from "react-icons/fa";
 import { useCartActions } from "../hooks/useCartActions";
+import { CATEGORIES } from "../constants/categories";
 
 Modal.setAppElement("#root");
 
@@ -26,9 +28,10 @@ const Produit = () => {
 
   const parseCategories = (categoriesStr) => {
     try {
-      return JSON.parse(categoriesStr);
+      const parsedCategories = JSON.parse(categoriesStr);
+      return Array.isArray(parsedCategories) ? parsedCategories : []; // Toujours renvoyer un tableau
     } catch (error) {
-      return [];
+      return []; // En cas d'erreur, renvoyer un tableau vide
     }
   };
 
@@ -75,7 +78,7 @@ const Produit = () => {
     setCurrentProduct(product);
     setDescription(product.description);
     setPrice(product.price);
-    setcategory(product.category);
+    setcategory(parseCategories(product.category) || []);
     setEditModalOpen(true);
   };
 
@@ -99,19 +102,17 @@ const Produit = () => {
       <div>
         <h2>Filtrer par catégorie</h2>
         <div>
-          {["disney", "jeux vidéo", "verre", "ardoise", "fleur", "mirroir"].map(
-            (cat) => (
-              <div key={cat}>
-                <input
-                  type="checkbox"
-                  value={cat}
-                  checked={selectedCategories.includes(cat)}
-                  onChange={handleCategoryFilterChange}
-                />
-                <label>{cat}</label>
-              </div>
-            )
-          )}
+          {CATEGORIES.map((cat) => (
+            <div key={cat}>
+              <input
+                type="checkbox"
+                value={cat}
+                checked={selectedCategories.includes(cat)}
+                onChange={handleCategoryFilterChange}
+              />
+              <label>{cat}</label>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -150,9 +151,11 @@ const Produit = () => {
           setDescription={setDescription}
           price={price}
           setPrice={setPrice}
+          category={category}
           setCategory={setcategory}
           setIsModalOpen={setEditModalOpen}
           imageRequired={false}
+          existingImage={`http://localhost:5000${currentProduct?.imageUrl}`}
         />
       </Modal>
       <div className="produit">

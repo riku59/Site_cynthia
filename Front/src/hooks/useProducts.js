@@ -4,9 +4,10 @@ import {
   deleteProduct,
   fetchProducts,
   updateProduct,
+  fetchProductsByCategory,
 } from "../utils/product";
 
-const useProducts = () => {
+function useProducts() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -22,6 +23,19 @@ const useProducts = () => {
 
     fetchData();
   }, []);
+
+  // trier par catégories
+  const fetchProductByCategory = async (category) => {
+    try {
+      const productsData = await fetchProductsByCategory(category);
+      setProducts(productsData);
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des produits par catégorie:",
+        error
+      );
+    }
+  };
 
   // ajout d'un produit
   const addProduct = async (formData) => {
@@ -58,7 +72,13 @@ const useProducts = () => {
     }
   };
 
-  return { products, addProduct, deleteProductById, modifProduct };
-};
+  return {
+    products,
+    addProduct,
+    deleteProductById,
+    modifProduct,
+    fetchProductByCategory,
+  };
+}
 
 export default useProducts;

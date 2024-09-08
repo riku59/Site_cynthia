@@ -8,6 +8,8 @@ const ProductForm = ({
   setDescription,
   price,
   setPrice,
+  category,
+  setCategory,
   setIsModalOpen,
   imageRequired = false,
 }) => {
@@ -15,6 +17,26 @@ const ProductForm = ({
 
   const handleFormSubmit = (data) => {
     onSubmit();
+  };
+
+  const categories = [
+    "disney",
+    "jeux vidéo",
+    "verre",
+    "ardoise",
+    "fleur",
+    "mirroir",
+  ];
+
+  const handleCategoryChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      // Ajouter la catégorie si elle est cochée
+      setCategory([...category, value]);
+    } else {
+      // Supprimer la catégorie si elle est décochée
+      setCategory(category.filter((cat) => cat !== value));
+    }
   };
 
   return (
@@ -44,6 +66,22 @@ const ProductForm = ({
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
+      </label>
+      <label>
+        Catégorie:
+        <div>
+          {categories.map((cat) => (
+            <div key={cat}>
+              <input
+                type="checkbox"
+                value={cat}
+                checked={category.includes(cat)}
+                onChange={handleCategoryChange}
+              />
+              <label>{cat}</label>
+            </div>
+          ))}
+        </div>
       </label>
       <button type="submit">Soumettre</button>
       <button type="button" onClick={() => setIsModalOpen(false)}>

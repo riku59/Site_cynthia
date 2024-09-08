@@ -84,3 +84,24 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 };
+
+export const fetchProductsByCategory = async (category) => {
+  try {
+    const response = await fetch(
+      "http://localhost:5000/api/products/category/${category}"
+    );
+    if (!response.ok) {
+      throw new Error(
+        "Erreur lors de la récupération des produits par catégorie."
+      );
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des produits par catégorie:",
+      error
+    );
+    throw error;
+  }
+};

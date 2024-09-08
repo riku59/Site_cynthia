@@ -29,14 +29,23 @@ module.exports.getProducts = async (req, res) => {
   }
 };
 
+module.exports.getProductByCategory = async (req, res) => {
+  try {
+    const products = await ProductModel.find({ category: req.params.category });
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports.setProduct = async (req, res) => {
   upload(req, res, async (err) => {
     if (err) return res.status(500).json({ message: err.message });
 
-    if (!req.body.description || !req.body.price) {
-      return res
-        .status(400)
-        .json({ message: "Merci d'ajouter une description et un prix" });
+    if (!req.body.description || !req.body.price || !req.body.category) {
+      return res.status(400).json({
+        message: "Merci d'ajouter une description, un prix et une catégorie ",
+      });
     }
 
     try {
@@ -44,6 +53,7 @@ module.exports.setProduct = async (req, res) => {
         imageUrl: "/uploads/" + req.file.filename,
         description: req.body.description,
         price: req.body.price,
+        category: req.body.category,
       });
       res.status(200).json(product);
     } catch (err) {
@@ -63,6 +73,7 @@ module.exports.editProduct = async (req, res) => {
 
       product.description = req.body.description || product.description;
       product.price = req.body.price || product.price;
+      product.category = req.body.category || product.category;
       if (req.file) {
         product.imageUrl = "/uploads/" + req.file.filename;
       }

@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
+
 const ProductModel = require("../models/product.model");
 
 // Configuration de multer pour le stockage des fichiers
@@ -74,10 +75,22 @@ module.exports.editProduct = async (req, res) => {
       product.description = req.body.description || product.description;
       product.price = req.body.price || product.price;
       product.category = req.body.category || product.category;
+
       if (req.file) {
+        // Supprimer l'ancienne image, si elle existe
+        const oldImagePath = path.join(
+          __dirname,
+          "..",
+          "uploads",
+          path.basename(product.imageUrl)
+        );
+        if (fs.existsSync(oldImagePath)) {
+          deleteImage(oldImagePath);
+        }
+
+        // Mettre à jour l'URL de l'image
         product.imageUrl = "/uploads/" + req.file.filename;
       }
-
       const updatedProduct = await product.save();
       res.status(200).json(updatedProduct);
     } catch (err) {
@@ -92,8 +105,17 @@ module.exports.deleteProduct = async (req, res) => {
     if (!product)
       return res.status(400).json({ message: "Ce produit n'existe pas" });
 
-    const filePath = path.join(__dirname, "..", product.imageUrl);
-    deleteImage(filePath);
+    const filePath = path.resolve(
+      __dirname,
+      "..",
+      "uploads",
+      path.basename(product.imageUrl)
+    );
+    if (fs.existsSync(filePath)) {
+      deleteImage(filePath);
+    } else {
+      console.error("Le fichier n'existe pas :", filePath);
+    }
 
     await product.remove();
     res.status(200).json({ message: "Produit supprimé " + req.params.id });
